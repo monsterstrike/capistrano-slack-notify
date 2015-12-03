@@ -103,7 +103,7 @@ module Capistrano
       configuration.load do
         # Add the default hooks by default.
         set :deployer do
-          ENV['USER'] || ENV['GIT_AUTHOR_NAME'] || `git config user.name`.chomp
+          ENV['USER']
         end
 
         namespace :slack do
