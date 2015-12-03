@@ -109,7 +109,12 @@ module Capistrano
         namespace :slack do
           desc "Notify Slack that the deploy has started."
           task :starting do
-            post_to_channel(:grey, "#{deployer} is deploying #{deploy_target} to #{destination}")
+            revision = if real_revision
+                         " (revision #{real_revision[0..7]})"
+                       else
+                         ""
+                       end
+            post_to_channel(:grey, "#{deployer} is deploying #{deploy_target} #{revision} to #{destination}")
             set(:start_time, Time.now)
           end
 
