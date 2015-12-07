@@ -79,23 +79,23 @@ module Capistrano
       fetch(:slack_app_name, fetch(:application))
     end
 
-    def deployer
+    def slack_deployer
       fetch(:deployer)
     end
 
-    def stage
+    def slack_stage
       fetch(:stage, 'production')
     end
 
-    def destination
-      fetch(:slack_destination, stage)
+    def slack_destination
+      fetch(:slack_destination, slack_stage)
     end
 
-    def repository
+    def slack_repository
       fetch(:repository, 'origin')
     end
 
-    def deploy_target
+    def slack_deploy_target
       [slack_app_name, branch].join('/')
     end
 
@@ -114,13 +114,13 @@ module Capistrano
                        else
                          ""
                        end
-            post_to_channel(:grey, "#{deployer} is deploying #{deploy_target} #{revision} to #{destination}")
+            post_to_channel(:grey, "#{slack_deployer} is deploying #{slack_deploy_target} #{revision} to #{slack_destination}")
             set(:start_time, Time.now)
           end
 
           desc "Notify Slack that the deploy has completed successfully."
           task :finished do
-            msg = "#{deployer} deployed #{deploy_target} to #{destination} *successfully*"
+            msg = "#{slack_deployer} deployed #{slack_deploy_target} to #{slack_destination} *successfully*"
 
             if start_time = fetch(:start_time, nil)
               msg << " in #{Time.now.to_i - start_time.to_i} seconds."
@@ -133,7 +133,7 @@ module Capistrano
 
           desc "Notify Slack that the deploy failed."
           task :failed do
-            post_to_channel(:red, "#{deployer} *failed* to deploy #{deploy_target} to #{destination}")
+            post_to_channel(:red, "#{slack_deployer} *failed* to deploy #{slack_deploy_target} to #{slack_destination}")
           end
         end # end namespace :slack
       end
