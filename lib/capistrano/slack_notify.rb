@@ -84,7 +84,7 @@ module Capistrano
     end
 
     def slack_stage
-      fetch(:stage, 'production')
+      fetch(:stage, 'development')
     end
 
     def slack_destination
