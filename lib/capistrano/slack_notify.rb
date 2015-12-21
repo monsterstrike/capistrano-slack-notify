@@ -91,10 +91,6 @@ module Capistrano
       fetch(:slack_destination, slack_stage)
     end
 
-    def slack_repository
-      fetch(:repository, 'origin')
-    end
-
     def slack_deploy_target
       [slack_app_name, branch].join('/')
     end
