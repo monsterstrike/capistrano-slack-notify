@@ -38,7 +38,7 @@ module Capistrano
         'text'       => announcement,
         'icon_emoji' => slack_emoji,
         'mrkdwn'     => true
-      }.to_json
+      }.merge(slack_post_message_option.stringify_keys).to_json
     end
 
     def attachment_payload(color, announcement)
@@ -52,7 +52,7 @@ module Capistrano
           'color'     => HEX_COLORS[color],
           'mrkdwn_in' => %w{text}
         }]
-      }.to_json
+      }.merge(slack_post_message_option.stringify_keys).to_json
     end
 
     def use_color?
@@ -93,6 +93,10 @@ module Capistrano
 
     def slack_deploy_target
       [slack_app_name, branch].join('/')
+    end
+
+    def slack_post_message_option
+      fetch(:slack_post_message_option, {})
     end
 
     def self.extended(configuration)
