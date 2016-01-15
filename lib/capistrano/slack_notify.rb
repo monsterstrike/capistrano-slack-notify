@@ -38,7 +38,7 @@ module Capistrano
         'text'       => announcement,
         'icon_emoji' => slack_emoji,
         'mrkdwn'     => true
-      }.to_json
+      }.merge(slack_post_message_option.stringify_keys).to_json
     end
 
     def attachment_payload(color, announcement)
