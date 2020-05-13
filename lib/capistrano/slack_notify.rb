@@ -99,6 +99,18 @@ module Capistrano
       fetch(:slack_post_message_option, {})
     end
 
+    def branch
+      @branch ||= fetch(:branch, '')
+    end
+
+    def slack_app_and_branch
+      if branch.nil?
+        slack_app_name
+      else
+        [slack_app_name, branch].join('/')
+      end
+    end
+
     def self.extended(configuration)
       configuration.load do
         # Add the default hooks by default.
@@ -114,8 +126,17 @@ module Capistrano
                        else
                          ""
                        end
+            on_rollback do
+              post_to_channel(:red, "#{slack_deployer} *failed* to deploy #{slack_deploy_target} #{revision} to #{slack_destination}")
+            end
+
             post_to_channel(:grey, "#{slack_deployer} is deploying #{slack_deploy_target} #{revision} to #{slack_destination}")
             set(:start_time, Time.now)
+          end
+
+          desc "Notify Slack that the rollback has completed."
+          task :rolled_back do
+            post_to_channel(:green, "#{slack_deployer} has rolled back #{slack_deploy_target}")
           end
 
           desc "Notify Slack that the deploy has completed successfully."
