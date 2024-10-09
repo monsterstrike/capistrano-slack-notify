@@ -1,3 +1,7 @@
+## 2.0.0 / 2023-10-09
+
+  * Support Capistrano v3
+
 ## 1.3.4 / 2019-06-27
 
   * If no branch is specified, derive revision from HEAD (#29)
